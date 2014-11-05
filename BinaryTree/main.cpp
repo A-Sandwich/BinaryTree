@@ -8,8 +8,22 @@
 
 #include <iostream>
 
+using namespace std;
+
+struct node{
+    string name = "default";
+    node* leftNode = NULL;
+    node* rightNode = NULL;
+};
+
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    std::cout << "Hello, World!\n";
+    node* root = new node;
+    node* left = new node;
+    node* right = new node;
+    root->name = "root";
+    
+    
+    std::cout << "Hello, World!\n" << endl;
+    cout << root->name << ", " << root->leftNode->name;
     return 0;
 }
