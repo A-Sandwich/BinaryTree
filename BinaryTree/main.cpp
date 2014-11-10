@@ -20,11 +20,9 @@ struct node{
 
 void positionAndInsertNode(node* root, int value);
 void findAndRemove(node* parent, int value);
+node* findMin(node* parent);
 
 int main(int argc, const char * argv[]) {
-    node* root = new node;
-    node* left = new node;
-    node* right = new node;
     
     
     std::cout << "Hello, World!\n" << endl;
@@ -58,16 +56,37 @@ void positionAndInsertNode(node* parent, node* newNode){
  */
 void findAndRemove(node* parent, node* currentNode, int value){
     
-    if(parent->value == value){
+    if(currentNode->value == value){
         if(parent->isRoot && currentNode->isRoot){
-            if(parent->leftNode == NULL && parent->rightNode == NULL && currentNode->quantity <= 1){
-                parent->value = NULL;
-                parent->quantity = 0;
+            if(currentNode->leftNode == NULL && currentNode->rightNode == NULL && currentNode->quantity <= 1){
+                currentNode->value = NULL;
+                currentNode->quantity = 0;
             }else{
-                parent->quantity--;
+                currentNode->quantity--;
             }
         }else{
-            
+            if(currentNode->leftNode == NULL && currentNode->rightNode == NULL){
+                if(currentNode->value > parent->value)
+                    parent->rightNode = NULL;
+                else
+                    parent->leftNode = NULL;
+            }else{
+                if(currentNode->leftNode == NULL){
+                    if(currentNode->value > parent->value)
+                        parent->rightNode = currentNode->rightNode;
+                    else
+                        parent->leftNode = currentNode->rightNode;
+                }else if(currentNode->rightNode == NULL){
+                    if(currentNode->value > parent->value)
+                        parent->rightNode = currentNode->leftNode;
+                    else
+                        parent->leftNode = currentNode->leftNode;
+                }else{//two children
+                    
+                }
+                    
+            }
+                
         }
     }else if(parent->value > value){
         findAndRemove(currentNode, currentNode->leftNode, value);
@@ -75,3 +94,14 @@ void findAndRemove(node* parent, node* currentNode, int value){
         findAndRemove(currentNode, currentNode->rightNode, value);
     }
 }//end findAndRemove
+
+
+node* findMin(node* parent){
+    if(parent->leftNode == NULL)
+        return parent;
+    else
+        findMin(parent->leftNode);
+    //build fails if I don't have a return outside of conditional statements. Code shoulde never reach here:
+    parent->value = NULL;
+    return parent;
+}//end findMin
