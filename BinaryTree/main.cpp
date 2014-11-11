@@ -21,6 +21,7 @@ struct node{
 void positionAndInsertNode(node* root, int value);
 void findAndRemove(node* parent, int value);
 node* findMin(node* parent);
+node* findParentMin(node* parent, int value);
 
 int main(int argc, const char * argv[]) {
     
@@ -55,7 +56,6 @@ void positionAndInsertNode(node* parent, node* newNode){
  * traverses tree and if the node exists it either decrements quantity or removes node.
  */
 void findAndRemove(node* parent, node* currentNode, int value){
-    
     if(currentNode->value == value){
         if(parent->isRoot && currentNode->isRoot){
             if(currentNode->leftNode == NULL && currentNode->rightNode == NULL && currentNode->quantity <= 1){
@@ -66,10 +66,16 @@ void findAndRemove(node* parent, node* currentNode, int value){
             }
         }else{
             if(currentNode->leftNode == NULL && currentNode->rightNode == NULL){
-                if(currentNode->value > parent->value)
-                    parent->rightNode = NULL;
-                else
-                    parent->leftNode = NULL;
+                if(currentNode->quantity > 1){
+                    currentNode->quantity--;
+                }else{
+                    if(currentNode->value > parent->value)
+                        parent->rightNode = NULL;
+                    else
+                        parent->leftNode = NULL;
+                }
+            }else if(currentNode->quantity > 1){
+                currentNode->quantity--;
             }else{
                 if(currentNode->leftNode == NULL){
                     if(currentNode->value > parent->value)
@@ -82,7 +88,11 @@ void findAndRemove(node* parent, node* currentNode, int value){
                     else
                         parent->leftNode = currentNode->leftNode;
                 }else{//two children
-                    
+                    node* replacementNode = findMin(currentNode->rightNode);
+                    node* parentOfReplacement = findParentMin(currentNode->rightNode, value);
+                    currentNode->value = replacementNode->value;
+                    currentNode->quantity = replacementNode->quantity;
+                    parentOfReplacement->leftNode = replacementNode->rightNode;
                 }
                     
             }
@@ -100,8 +110,15 @@ node* findMin(node* parent){
     if(parent->leftNode == NULL)
         return parent;
     else
-        findMin(parent->leftNode);
+        return findMin(parent->leftNode);
     //build fails if I don't have a return outside of conditional statements. Code shoulde never reach here:
     parent->value = NULL;
     return parent;
 }//end findMin
+
+node* findParentMin(node* parent, int value){
+    if(parent->leftNode->value == value)
+        return parent;
+    else
+        return findParentMin(parent->leftNode, value);
+}
