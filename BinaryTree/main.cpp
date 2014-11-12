@@ -16,18 +16,56 @@ struct node{
     node* leftNode = NULL;
     node* rightNode = NULL;
     bool isRoot = false;
+    bool traversed = false;
 };
 
-void positionAndInsertNode(node* root, int value);
+void positionAndInsertNode(node* root, node* newNode);
 void findAndRemove(node* parent, int value);
 node* findMin(node* parent);
 node* findParentMin(node* parent, int value);
+node* createAndInitNode(int value);
+void inOrderTraversal(node* root);
 
 int main(int argc, const char * argv[]) {
+    node* root = new node;
+    root->isRoot = true;
+    root->quantity = 1;
+    root->value = 99;
+    root->traversed = false;
     
+    positionAndInsertNode(root, createAndInitNode(1));
+    positionAndInsertNode(root, createAndInitNode(5));
+    positionAndInsertNode(root, createAndInitNode(100));
+    positionAndInsertNode(root, createAndInitNode(101));
+    positionAndInsertNode(root, createAndInitNode(150));
+    positionAndInsertNode(root, createAndInitNode(199));
+    //1,5,99,100,101,150,199
+    inOrderTraversal(root);
+    //cout << root->value <<", "<<root->rightNode->value<<", "<<root->rightNode->rightNode->value;
     
-    std::cout << "Hello, World!\n" << endl;
-    return 0;
+}
+
+void inOrderTraversal(node* root){
+    if(root->leftNode != NULL && !root->leftNode->traversed){
+        inOrderTraversal(root->leftNode);
+    }
+    
+    if(!root->traversed){
+        cout << root->value <<", ";
+        root->traversed = true;
+    }
+    
+    if(root->rightNode != NULL && !root->rightNode->traversed){
+        inOrderTraversal(root->rightNode);
+    }
+}
+
+node* createAndInitNode(int value){
+    node* newNode = new node;
+    newNode->isRoot = false;
+    newNode->value = value;
+    newNode->quantity = 1;
+    return newNode;
 }
 
 
@@ -36,12 +74,12 @@ int main(int argc, const char * argv[]) {
  * Traverses tree and inserts node or iterates count.
  */
 void positionAndInsertNode(node* parent, node* newNode){
-    if(parent->value < newNode->value){
+    if(parent->value > newNode->value){
         if(parent->leftNode == NULL)
             parent->leftNode = newNode;
         else
             positionAndInsertNode(parent->leftNode, newNode);
-    }else if(parent->value > newNode->value){
+    }else if(parent->value < newNode->value){
         if(parent->rightNode == NULL)
             parent->rightNode = newNode;
         else
