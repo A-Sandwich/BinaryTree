@@ -20,7 +20,7 @@ struct node{
 };
 
 void positionAndInsertNode(node* root, node* newNode);
-void findAndRemove(node* parent, int value);
+void findAndRemove(node* parent, node* currentNode, int value);
 node* findMin(node* parent);
 node* findParentMin(node* parent, int value);
 node* createAndInitNode(int value);
@@ -35,10 +35,13 @@ int main(int argc, const char * argv[]) {
     
     positionAndInsertNode(root, createAndInitNode(1));
     positionAndInsertNode(root, createAndInitNode(5));
+    positionAndInsertNode(root, createAndInitNode(4));
+    positionAndInsertNode(root, createAndInitNode(6));
     positionAndInsertNode(root, createAndInitNode(100));
     positionAndInsertNode(root, createAndInitNode(101));
     positionAndInsertNode(root, createAndInitNode(150));
     positionAndInsertNode(root, createAndInitNode(199));
+    findAndRemove(root, root, 5);
     //1,5,99,100,101,150,199
     inOrderTraversal(root);
     //cout << root->value <<", "<<root->rightNode->value<<", "<<root->rightNode->rightNode->value;
@@ -127,16 +130,21 @@ void findAndRemove(node* parent, node* currentNode, int value){
                         parent->leftNode = currentNode->leftNode;
                 }else{//two children
                     node* replacementNode = findMin(currentNode->rightNode);
-                    node* parentOfReplacement = findParentMin(currentNode->rightNode, value);
+                    node* parentOfReplacement = findParentMin(currentNode->rightNode, replacementNode->value);
                     currentNode->value = replacementNode->value;
                     currentNode->quantity = replacementNode->quantity;
-                    parentOfReplacement->leftNode = replacementNode->rightNode;
+                
+                    if(currentNode->rightNode->value != replacementNode->value)
+                        parentOfReplacement->leftNode = replacementNode->rightNode;
+                    else
+                        parentOfReplacement->leftNode = NULL;
+                    
                 }
                     
             }
                 
         }
-    }else if(parent->value > value){
+    }else if(currentNode->value > value){
         findAndRemove(currentNode, currentNode->leftNode, value);
     }else{
         findAndRemove(currentNode, currentNode->rightNode, value);
@@ -155,8 +163,18 @@ node* findMin(node* parent){
 }//end findMin
 
 node* findParentMin(node* parent, int value){
-    if(parent->leftNode->value == value)
+    node* temp;
+    if(parent->leftNode != NULL){
+            temp = parent->leftNode;
+        if(temp->value == value)
+            return parent;
+        else
+            return findParentMin(temp, value);
+    }else if(parent->value == value){
         return parent;
-    else
-        return findParentMin(parent->leftNode, value);
+    }else{
+        cout << "FAIL";
+        
+        return NULL;
+    }
 }
