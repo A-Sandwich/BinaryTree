@@ -32,7 +32,7 @@ int main(int argc, const char * argv[]) {
     root->quantity = 1;
     root->value = 99;
     root->traversed = false;
-    
+
     positionAndInsertNode(root, createAndInitNode(1));
     positionAndInsertNode(root, createAndInitNode(5));
     positionAndInsertNode(root, createAndInitNode(4));
@@ -45,19 +45,19 @@ int main(int argc, const char * argv[]) {
     //1,5,99,100,101,150,199
     inOrderTraversal(root);
     //cout << root->value <<", "<<root->rightNode->value<<", "<<root->rightNode->rightNode->value;
-    
+
 }
 
 void inOrderTraversal(node* root){
     if(root->leftNode != NULL && !root->leftNode->traversed){
         inOrderTraversal(root->leftNode);
     }
-    
+
     if(!root->traversed){
         cout << root->value <<", ";
         root->traversed = true;
     }
-    
+
     if(root->rightNode != NULL && !root->rightNode->traversed){
         inOrderTraversal(root->rightNode);
     }
@@ -90,7 +90,7 @@ void positionAndInsertNode(node* parent, node* newNode){
     }else{
         parent->quantity++;
     }
-        
+
 }//end insertNode
 
 /*
@@ -130,19 +130,21 @@ void findAndRemove(node* parent, node* currentNode, int value){
                         parent->leftNode = currentNode->leftNode;
                 }else{//two children
                     node* replacementNode = findMin(currentNode->rightNode);
-                    node* parentOfReplacement = findParentMin(currentNode->rightNode, replacementNode->value);
+                    node* parentOfReplacement;
+
+                    if(currentNode->rightNode->value == replacementNode->value)
+                        parentOfReplacement = currentNode;
+                    else
+                        parentOfReplacement = findParentMin(currentNode->rightNode, replacementNode->value);
+
                     currentNode->value = replacementNode->value;
                     currentNode->quantity = replacementNode->quantity;
-                
-                    if(currentNode->rightNode->value != replacementNode->value)
-                        parentOfReplacement->leftNode = replacementNode->rightNode;
-                    else
-                        parentOfReplacement->leftNode = NULL;
-                    
+
+                    parentOfReplacement->rightNode = replacementNode->rightNode;
                 }
-                    
+
             }
-                
+
         }
     }else if(currentNode->value > value){
         findAndRemove(currentNode, currentNode->leftNode, value);
@@ -158,8 +160,8 @@ node* findMin(node* parent){
     else
         return findMin(parent->leftNode);
     //build fails if I don't have a return outside of conditional statements. Code shoulde never reach here:
-    parent->value = NULL;
-    return parent;
+    //parent->value = NULL;
+    //return parent;
 }//end findMin
 
 node* findParentMin(node* parent, int value){
@@ -174,7 +176,7 @@ node* findParentMin(node* parent, int value){
         return parent;
     }else{
         cout << "FAIL";
-        
+
         return NULL;
     }
 }
