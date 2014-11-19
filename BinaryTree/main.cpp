@@ -7,6 +7,9 @@
 //
 
 #include <iostream>
+#include <stdio.h>      /* printf, scanf, puts, NULL */
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 
 using namespace std;
 
@@ -32,16 +35,33 @@ int main(int argc, const char * argv[]) {
     root->quantity = 1;
     root->value = 99;
     root->traversed = false;
-
-    positionAndInsertNode(root, createAndInitNode(1));
+    int randomNum;
+    int size = 50;
+    int* usedNumber = new int[size];
+    srand(time(NULL));
+    
+    for(int i = 0; i < size; i++){
+         randomNum = rand() % 1000 + 1;
+        usedNumber[i] = randomNum;
+        cout << randomNum << " ";
+        positionAndInsertNode(root, createAndInitNode( randomNum ));//1 - 1000
+    }
+    cout << endl << " |||| " << endl;
+    for(int i = 0; i < size; i++){
+        if(i % 2 == 0 && usedNumber[i] != root->value){
+            cout << usedNumber[i] << " ";
+            findAndRemove(root, root, usedNumber[i]);
+        }
+    }
+    /*positionAndInsertNode(root, createAndInitNode(1));
     positionAndInsertNode(root, createAndInitNode(5));
     positionAndInsertNode(root, createAndInitNode(4));
     positionAndInsertNode(root, createAndInitNode(6));
     positionAndInsertNode(root, createAndInitNode(100));
     positionAndInsertNode(root, createAndInitNode(101));
     positionAndInsertNode(root, createAndInitNode(150));
-    positionAndInsertNode(root, createAndInitNode(199));
-    findAndRemove(root, root, 5);
+    positionAndInsertNode(root, createAndInitNode(199));*/
+    //findAndRemove(root, root, 5);
     //1,5,99,100,101,150,199
     inOrderTraversal(root);
     //cout << root->value <<", "<<root->rightNode->value<<", "<<root->rightNode->rightNode->value;
@@ -97,6 +117,7 @@ void positionAndInsertNode(node* parent, node* newNode){
  * traverses tree and if the node exists it either decrements quantity or removes node.
  */
 void findAndRemove(node* parent, node* currentNode, int value){
+    cout << "removing! " << endl;
     if(currentNode->value == value){
         if(parent->isRoot && currentNode->isRoot){
             if(currentNode->leftNode == NULL && currentNode->rightNode == NULL && currentNode->quantity <= 1){
