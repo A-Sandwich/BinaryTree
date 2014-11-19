@@ -53,16 +53,16 @@ int main(int argc, const char * argv[]) {
             findAndRemove(root, root, usedNumber[i]);
         }
     }
-    /*positionAndInsertNode(root, createAndInitNode(1));
-    positionAndInsertNode(root, createAndInitNode(5));
-    positionAndInsertNode(root, createAndInitNode(4));
-    positionAndInsertNode(root, createAndInitNode(6));
-    positionAndInsertNode(root, createAndInitNode(100));
-    positionAndInsertNode(root, createAndInitNode(101));
-    positionAndInsertNode(root, createAndInitNode(150));
-    positionAndInsertNode(root, createAndInitNode(199));*/
-    //findAndRemove(root, root, 5);
-    //1,5,99,100,101,150,199
+    /*positionAndInsertNode(root, createAndInitNode(30));
+    positionAndInsertNode(root, createAndInitNode(20));
+    positionAndInsertNode(root, createAndInitNode(40));
+    //positionAndInsertNode(root, createAndInitNode(25));
+    //positionAndInsertNode(root, createAndInitNode(15));
+    positionAndInsertNode(root, createAndInitNode(35));
+    //positionAndInsertNode(root, createAndInitNode(45));
+    //positionAndInsertNode(root, createAndInitNode(100));
+    findAndRemove(root, root, 30);
+    //1,5,99,100,101,150,199*/
     inOrderTraversal(root);
     //cout << root->value <<", "<<root->rightNode->value<<", "<<root->rightNode->rightNode->value;
 
@@ -117,7 +117,6 @@ void positionAndInsertNode(node* parent, node* newNode){
  * traverses tree and if the node exists it either decrements quantity or removes node.
  */
 void findAndRemove(node* parent, node* currentNode, int value){
-    cout << "removing! " << endl;
     if(currentNode->value == value){
         if(parent->isRoot && currentNode->isRoot){
             if(currentNode->leftNode == NULL && currentNode->rightNode == NULL && currentNode->quantity <= 1){
@@ -157,11 +156,17 @@ void findAndRemove(node* parent, node* currentNode, int value){
                         parentOfReplacement = currentNode;
                     else
                         parentOfReplacement = findParentMin(currentNode->rightNode, replacementNode->value);
-
                     currentNode->value = replacementNode->value;
                     currentNode->quantity = replacementNode->quantity;
-
-                    parentOfReplacement->rightNode = replacementNode->rightNode;
+                    if(parentOfReplacement->rightNode != NULL){
+                        if(parentOfReplacement->rightNode->value == replacementNode->value)
+                            parentOfReplacement->rightNode = replacementNode->rightNode;
+                    }
+                    if(parentOfReplacement->leftNode != NULL){
+                        if(parentOfReplacement->leftNode->value == replacementNode->value){
+                            parentOfReplacement->leftNode = replacementNode->rightNode;
+                        }
+                    }
                 }
 
             }
