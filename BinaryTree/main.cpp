@@ -81,19 +81,8 @@ int main(int argc, const char * argv[]) {
             myTree->remove(usedNumber[i]);
         }
     }
-    /*positionAndInsertNode(root, createAndInitNode(30));
-    positionAndInsertNode(root, createAndInitNode(20));
-    positionAndInsertNode(root, createAndInitNode(40));
-    //positionAndInsertNode(root, createAndInitNode(25));
-    //positionAndInsertNode(root, createAndInitNode(15));
-    positionAndInsertNode(root, createAndInitNode(35));
-    //positionAndInsertNode(root, createAndInitNode(45));
-    //positionAndInsertNode(root, createAndInitNode(100));
-    findAndRemove(root, root, 30);
-    //1,5,99,100,101,150,199*/
     myTree->iOT();
-    //cout << root->value <<", "<<root->rightNode->value<<", "<<root->rightNode->rightNode->value;
-
+    
 }
 
 void BinaryTree::inOrderTraversal(node* root){
@@ -213,9 +202,6 @@ BinaryTree::node* BinaryTree::findMin(node* parent){
         return parent;
     else
         return findMin(parent->leftNode);
-    //build fails if I don't have a return outside of conditional statements. Code shoulde never reach here:
-    //parent->value = NULL;
-    //return parent;
 }//end findMin
 
 BinaryTree::node* BinaryTree::findParentMin(node* parent, int value){
@@ -226,11 +212,7 @@ BinaryTree::node* BinaryTree::findParentMin(node* parent, int value){
             return parent;
         else
             return findParentMin(temp, value);
-    }else if(parent->value == value){
-        return parent;
     }else{
-        cout << "FAIL";
-
-        return NULL;
+        return parent;
     }
 }
