@@ -13,44 +13,72 @@
 
 using namespace std;
 
-struct node{
-    int value = NULL;
-    int quantity = 1;
-    node* leftNode = NULL;
-    node* rightNode = NULL;
-    bool isRoot = false;
-    bool traversed = false;
+class BinaryTree{
+private:
+    struct node{
+        int value = NULL;
+        int quantity = 1;
+        node* leftNode = NULL;
+        node* rightNode = NULL;
+        bool isRoot = false;
+        bool traversed = false;
+    };
+    node* root;
+    node* findMin(node* parent);
+    node* findParentMin(node* parent, int value);
+    void positionAndInsertNode(node* root, node* newNode);
+    void findAndRemove(node* parent, node* currentNode, int value);
+    node* createAndInitNode(int value);
+    void inOrderTraversal(node* root);
+
+    
+public:
+    void iOT();
+    BinaryTree(int rootValue);
+    void insert(int num);
+    void remove(int num);
+
 };
 
-void positionAndInsertNode(node* root, node* newNode);
-void findAndRemove(node* parent, node* currentNode, int value);
-node* findMin(node* parent);
-node* findParentMin(node* parent, int value);
-node* createAndInitNode(int value);
-void inOrderTraversal(node* root);
-
-int main(int argc, const char * argv[]) {
-    node* root = new node;
+BinaryTree::BinaryTree(int rootValue){
+    root = new node;
     root->isRoot = true;
     root->quantity = 1;
-    root->value = 99;
+    root->value = rootValue;
     root->traversed = false;
+    
+}
+
+void BinaryTree::iOT(){
+    inOrderTraversal(root);
+}
+
+void BinaryTree::insert(int num){
+    positionAndInsertNode(root, createAndInitNode(num));
+}
+
+void BinaryTree::remove(int num){
+    findAndRemove(root, root, num);
+}
+
+int main(int argc, const char * argv[]) {
+
     int randomNum;
-    int size = 50;
+    int size = 500;
     int* usedNumber = new int[size];
     srand(time(NULL));
-    
+    int rootValue = rand() % 1000 + 1;
+    BinaryTree* myTree = new BinaryTree(rootValue);
     for(int i = 0; i < size; i++){
          randomNum = rand() % 1000 + 1;
         usedNumber[i] = randomNum;
         cout << randomNum << " ";
-        positionAndInsertNode(root, createAndInitNode( randomNum ));//1 - 1000
+        myTree->insert(randomNum );//1 - 1000
     }
     cout << endl << " |||| " << endl;
     for(int i = 0; i < size; i++){
-        if(i % 2 == 0 && usedNumber[i] != root->value){
-            cout << usedNumber[i] << " ";
-            findAndRemove(root, root, usedNumber[i]);
+        if(i % 2 == 0 && usedNumber[i] != rootValue){
+            myTree->remove(usedNumber[i]);
         }
     }
     /*positionAndInsertNode(root, createAndInitNode(30));
@@ -63,12 +91,12 @@ int main(int argc, const char * argv[]) {
     //positionAndInsertNode(root, createAndInitNode(100));
     findAndRemove(root, root, 30);
     //1,5,99,100,101,150,199*/
-    inOrderTraversal(root);
+    myTree->iOT();
     //cout << root->value <<", "<<root->rightNode->value<<", "<<root->rightNode->rightNode->value;
 
 }
 
-void inOrderTraversal(node* root){
+void BinaryTree::inOrderTraversal(node* root){
     if(root->leftNode != NULL && !root->leftNode->traversed){
         inOrderTraversal(root->leftNode);
     }
@@ -83,7 +111,7 @@ void inOrderTraversal(node* root){
     }
 }
 
-node* createAndInitNode(int value){
+BinaryTree::node* BinaryTree::createAndInitNode(int value){
     node* newNode = new node;
     newNode->isRoot = false;
     newNode->value = value;
@@ -96,7 +124,7 @@ node* createAndInitNode(int value){
 /*
  * Traverses tree and inserts node or iterates count.
  */
-void positionAndInsertNode(node* parent, node* newNode){
+void BinaryTree::positionAndInsertNode(node* parent, node* newNode){
     if(parent->value > newNode->value){
         if(parent->leftNode == NULL)
             parent->leftNode = newNode;
@@ -116,7 +144,7 @@ void positionAndInsertNode(node* parent, node* newNode){
 /*
  * traverses tree and if the node exists it either decrements quantity or removes node.
  */
-void findAndRemove(node* parent, node* currentNode, int value){
+void BinaryTree::findAndRemove(node* parent, node* currentNode, int value){
     if(currentNode->value == value){
         if(parent->isRoot && currentNode->isRoot){
             if(currentNode->leftNode == NULL && currentNode->rightNode == NULL && currentNode->quantity <= 1){
@@ -180,7 +208,7 @@ void findAndRemove(node* parent, node* currentNode, int value){
 }//end findAndRemove
 
 
-node* findMin(node* parent){
+BinaryTree::node* BinaryTree::findMin(node* parent){
     if(parent->leftNode == NULL)
         return parent;
     else
@@ -190,7 +218,7 @@ node* findMin(node* parent){
     //return parent;
 }//end findMin
 
-node* findParentMin(node* parent, int value){
+BinaryTree::node* BinaryTree::findParentMin(node* parent, int value){
     node* temp;
     if(parent->leftNode != NULL){
             temp = parent->leftNode;
